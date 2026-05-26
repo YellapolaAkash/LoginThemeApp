@@ -70,33 +70,35 @@ export const CustomInput: React.FC<CustomInputProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   label: {
-    fontSize: 14,
-    marginBottom: 8,
-    fontWeight: '600',
+    fontSize: 15,
+    marginBottom: 10,
+    fontWeight: '700',
   },
   inputWrapper: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: 18,
     borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
   input: {
     flex: 1,
     minHeight: 56,
     fontSize: 16,
-    paddingVertical: 6,
+    lineHeight: 22,
+    paddingVertical: 0,
   },
   iconButton: {
-    padding: 8,
+    padding: 10,
   },
   errorText: {
-    marginTop: 8,
+    marginTop: 10,
     fontSize: 13,
+    lineHeight: 18,
   },
 });

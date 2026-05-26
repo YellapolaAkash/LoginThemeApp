@@ -31,6 +31,8 @@ export const ThemeToggle: React.FC = () => {
       </View>
       <Pressable
         onPress={handleToggle}
+        accessibilityRole="switch"
+        accessibilityState={{ checked: isDark }}
         style={[
           styles.switch,
           { backgroundColor: isDark ? theme.colors.primary : theme.colors.inputBackground },

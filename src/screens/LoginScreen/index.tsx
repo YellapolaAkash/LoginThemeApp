@@ -1,10 +1,11 @@
 import { Formik } from 'formik';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -27,122 +28,106 @@ const initialValues: LoginFormSchema = {
 export const LoginScreen: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const theme = useAppTheme();
-  const scrollRef = useRef<ScrollView | null>(null);
-  const [passwordY, setPasswordY] = useState<number>(0);
-  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
-  const keyboardOffset = Platform.OS === 'ios' ? 80 : 100;
-
-  useEffect(() => {
-    const showSub = Keyboard.addListener('keyboardDidShow', (e) => {
-      setKeyboardHeight(e.endCoordinates?.height || 0);
-    });
-    const hideSub = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardHeight(0);
-    });
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, []);
+  const keyboardOffset = Platform.OS === 'ios' ? 90 : 24;
 
   const handleSubmit = (values: LoginFormSchema) => {
     console.log('Login submitted', values);
   };
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.screen, { backgroundColor: theme.colors.background }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={keyboardOffset}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView
-          ref={(r) => { scrollRef.current = r; }}
-          contentContainerStyle={[styles.content, { paddingBottom: Math.max(24, keyboardHeight + 24) }]}
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.header}>
-            <Text style={[styles.title, { color: theme.colors.textPrimary }]}>Welcome back</Text>
-            <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>Sign in to continue to your account.</Text>
-          </View>
-
-          <ThemeToggle />
-
-          <Formik
-            initialValues={initialValues}
-            validationSchema={loginValidationSchema}
-            onSubmit={handleSubmit}
+    <SafeAreaView style={[styles.screen, { backgroundColor: theme.colors.background }]}> 
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={keyboardOffset}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            style={[styles.scrollView, { backgroundColor: theme.colors.background }]}
+            contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            showsVerticalScrollIndicator={false}
           >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-              isValid,
-              dirty,
-              isSubmitting,
-            }) => (
-              <View style={styles.form}>
-                <CustomInput
-                  label="Email"
-                  placeholder="Enter your email"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  value={values.email}
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  error={errors.email}
-                  touched={Boolean(touched.email)}
-                />
+            <View style={styles.hero}>
+              <Text style={[styles.title, { color: theme.colors.textPrimary }]}>Welcome back</Text>
+              <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>Sign in to continue to your account.</Text>
+            </View>
 
-                <CustomInput
-                  label="Password"
-                  placeholder="Enter your password"
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  value={values.password}
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  error={errors.password}
-                  touched={Boolean(touched.password)}
-                  showPasswordToggle
-                  onTogglePassword={() => setShowPassword((prev) => !prev)}
-                  onLayout={(e) => setPasswordY(e.nativeEvent.layout.y)}
-                  onFocus={() => {
-                    // If keyboard already open, scroll immediately. Otherwise wait briefly for keyboard to open.
-                    const doScroll = () => {
-                      if (scrollRef.current && passwordY !== undefined) {
-                        scrollRef.current.scrollTo({ y: Math.max(passwordY - 24, 0), animated: true });
-                      }
-                    };
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.inputBorder,
+                  shadowColor: theme.colors.textPrimary,
+                },
+              ]}
+            >
+              <Text style={[styles.cardTitle, { color: theme.colors.textPrimary }]}>Secure login</Text>
+              <Text style={[styles.cardSubtitle, { color: theme.colors.textSecondary }]}>Use your credentials to access the dashboard.</Text>
 
-                    if (keyboardHeight > 0) {
-                      doScroll();
-                    } else {
-                      // wait for keyboard to open
-                      setTimeout(doScroll, 300);
-                    }
-                  }}
-                />
+              <ThemeToggle />
 
-                <CustomButton
-                  title="Login"
-                  onPress={() => handleSubmit()}
-                  disabled={!isValid || !dirty || isSubmitting}
-                  loading={isSubmitting}
-                />
-              </View>
-            )}
-          </Formik>
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={loginValidationSchema}
+                onSubmit={handleSubmit}
+              >
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                  isValid,
+                  dirty,
+                  isSubmitting,
+                }) => (
+                  <View style={styles.form}>
+                    <CustomInput
+                      label="Email"
+                      placeholder="Enter your email"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      value={values.email}
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      error={errors.email}
+                      touched={Boolean(touched.email)}
+                    />
+
+                    <CustomInput
+                      label="Password"
+                      placeholder="Enter your password"
+                      secureTextEntry={!showPassword}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      value={values.password}
+                      onChangeText={handleChange('password')}
+                      onBlur={handleBlur('password')}
+                      error={errors.password}
+                      touched={Boolean(touched.password)}
+                      showPasswordToggle
+                      onTogglePassword={() => setShowPassword((prev) => !prev)}
+                    />
+
+                    <CustomButton
+                      title="Login"
+                      onPress={() => handleSubmit()}
+                      disabled={!isValid || !dirty || isSubmitting}
+                      loading={isSubmitting}
+                    />
+                  </View>
+                )}
+              </Formik>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -150,21 +135,51 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
+  flex: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
   content: {
     flexGrow: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'stretch',
     paddingHorizontal: 24,
-    paddingTop: 40,
-    paddingBottom: 160,
+    paddingVertical: 24,
+    backgroundColor: 'transparent',
   },
-  header: {
-    marginBottom: 32,
+  hero: {
+    marginBottom: 24,
+  },
+  card: {
+    width: '100%',
+    borderRadius: 30,
+    borderWidth: 1,
+    padding: 28,
+    marginTop: 8,
+    marginBottom: 24,
+    shadowOpacity: 0.18,
+    shadowRadius: 26,
+    shadowOffset: { width: 0, height: 16 },
+    elevation: 14,
+    overflow: 'hidden',
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 6,
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 24,
   },
   title: {
-    fontSize: 30,
-    fontWeight: '800',
-    marginBottom: 8,
+    fontSize: 36,
+    fontWeight: '900',
+    marginBottom: 10,
+    letterSpacing: -0.6,
   },
   subtitle: {
     fontSize: 16,

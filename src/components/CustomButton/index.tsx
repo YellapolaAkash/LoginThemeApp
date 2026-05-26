@@ -29,6 +29,9 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 
   return (
     <TouchableOpacity
+      accessible
+      accessibilityRole="button"
+      accessibilityState={{ disabled: disabled || loading }}
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.8}
@@ -49,18 +52,19 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     width: '100%',
-    minHeight: 52,
-    borderRadius: 14,
+    minHeight: 56,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 18,
-    marginTop: 8,
+    marginTop: 18,
   },
   buttonDisabled: {
-    opacity: 0.8,
+    opacity: 0.72,
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
 });
