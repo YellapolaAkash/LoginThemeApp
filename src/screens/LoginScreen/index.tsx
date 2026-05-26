@@ -28,7 +28,6 @@ const initialValues: LoginFormSchema = {
 export const LoginScreen: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const theme = useAppTheme();
-  const keyboardOffset = Platform.OS === 'ios' ? 90 : 24;
 
   const handleSubmit = (values: LoginFormSchema) => {
     console.log('Login submitted', values);
@@ -38,8 +37,8 @@ export const LoginScreen: React.FC = () => {
     <SafeAreaView style={[styles.screen, { backgroundColor: theme.colors.background }]}> 
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={keyboardOffset}
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
@@ -64,8 +63,8 @@ export const LoginScreen: React.FC = () => {
                 },
               ]}
             >
-              <Text style={[styles.cardTitle, { color: theme.colors.textPrimary }]}>Secure login</Text>
-              <Text style={[styles.cardSubtitle, { color: theme.colors.textSecondary }]}>Use your credentials to access the dashboard.</Text>
+              <Text style={[styles.cardTitle, { color: theme.colors.textPrimary }]}>Secure access</Text>
+              <Text style={[styles.cardSubtitle, { color: theme.colors.textSecondary }]}>Use your credentials to access your dashboard quickly.</Text>
 
               <ThemeToggle />
 
@@ -143,47 +142,47 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'stretch',
-    paddingHorizontal: 24,
-    paddingVertical: 24,
-    backgroundColor: 'transparent',
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    paddingBottom: 24,
   },
   hero: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   card: {
     width: '100%',
-    borderRadius: 30,
+    borderRadius: 26,
     borderWidth: 1,
-    padding: 28,
-    marginTop: 8,
-    marginBottom: 24,
-    shadowOpacity: 0.18,
-    shadowRadius: 26,
-    shadowOffset: { width: 0, height: 16 },
-    elevation: 14,
+    padding: 20,
+    marginTop: 4,
+    marginBottom: 16,
+    shadowOpacity: 0.14,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 10,
     overflow: 'hidden',
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   cardSubtitle: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 24,
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 16,
   },
   title: {
-    fontSize: 36,
+    fontSize: 30,
     fontWeight: '900',
-    marginBottom: 10,
-    letterSpacing: -0.6,
+    marginBottom: 8,
+    letterSpacing: -0.4,
   },
   subtitle: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: 14,
+    lineHeight: 20,
   },
   form: {
     width: '100%',

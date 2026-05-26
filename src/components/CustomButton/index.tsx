@@ -52,19 +52,19 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     width: '100%',
-    minHeight: 56,
-    borderRadius: 18,
+    minHeight: 50,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 18,
-    marginTop: 18,
+    marginTop: 16,
   },
   buttonDisabled: {
     opacity: 0.72,
   },
   buttonText: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '700',
-    letterSpacing: 0.3,
+    letterSpacing: 0.35,
   },
 });
