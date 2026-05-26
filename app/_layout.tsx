@@ -1,24 +1,41 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import React, { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
+import { Provider, useDispatch } from 'react-redux';
+import { RootNavigator } from '../src/navigation';
+import { setTheme } from '../src/redux/slices/themeSlice';
+import { store } from '../src/redux/store';
+import { storageUtils } from '../src/storage/storageUtils';
+import { ThemeType } from '../src/types/theme';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+function RootLayoutContent() {
+  const dispatch = useDispatch();
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+  useEffect(() => {
+    // Load theme from storage on app start
+    const loadTheme = async () => {
+      const savedTheme = await storageUtils.getTheme();
+      if (savedTheme) {
+        dispatch(setTheme(savedTheme as ThemeType));
+      }
+    };
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+    loadTheme();
+  }, [dispatch]);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <RootNavigator />
       <StatusBar style="auto" />
-    </ThemeProvider>
+    </GestureHandlerRootView>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <Provider store={store}>
+      <RootLayoutContent />
+    </Provider>
   );
 }
