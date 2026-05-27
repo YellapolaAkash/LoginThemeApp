@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
+import { Slot } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { Provider } from 'react-redux';
-import { RootNavigator } from '../src/navigation';
 import { setTheme } from '../src/redux/slices/themeSlice';
 import { store } from '../src/redux/store';
 import { storageUtils } from '../src/storage/storageUtils';
@@ -34,7 +34,7 @@ function RootLayoutContent() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <RootNavigator />
+      <Slot />
       <StatusBar style={mode === 'dark' ? 'light' : 'dark'} />
     </GestureHandlerRootView>
   );
