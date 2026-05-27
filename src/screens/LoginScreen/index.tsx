@@ -48,8 +48,8 @@ export const LoginScreen: React.FC = () => {
     <SafeAreaView style={[styles.screen, { backgroundColor: background }]}> 
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 80}
+        behavior="padding"
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 0}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
@@ -148,12 +148,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'stretch',
-    minHeight: '100%',
     paddingHorizontal: 20,
     paddingVertical: 28,
-    paddingBottom: 24,
+    paddingBottom: 16,
   },
   hero: {
     marginBottom: 18,
