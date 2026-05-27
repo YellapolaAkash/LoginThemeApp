@@ -119,6 +119,9 @@ export const LoginScreen: React.FC = () => {
                       onTogglePassword={() => setShowPassword((prev) => !prev)}
                     />
 
+                    {/* Password requirements helper - concise single-line hint */}
+                    <Text style={[styles.pwHint, { color: theme.colors.textSecondary }]}>Password: 8+ chars, upper, lower, number, special</Text>
+
                     <CustomButton
                       title="Login"
                       onPress={() => handleSubmit()}
@@ -206,5 +209,20 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '100%',
+  },
+  pwRulesContainer: {
+    marginTop: 8,
+    marginBottom: 6,
+  },
+  pwRule: {
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 6,
+  },
+  pwHint: {
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 8,
+    marginBottom: 6,
   },
 });
