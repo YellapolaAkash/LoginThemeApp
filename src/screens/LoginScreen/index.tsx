@@ -14,7 +14,8 @@ import {
 import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from '../../components/CustomInput';
 import { ThemeToggle } from '../../components/ThemeToggle';
-import { useAppTheme } from '../../hooks/redux';
+import { useAppTheme, useThemeMode } from '../../hooks/redux';
+import { useRouter } from 'expo-router';
 import {
   LoginFormSchema,
   loginValidationSchema,
@@ -28,42 +29,47 @@ const initialValues: LoginFormSchema = {
 export const LoginScreen: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const theme = useAppTheme();
+  const mode = useThemeMode();
+  const isDark = mode === 'dark';
+  const router = useRouter();
 
-  const handleSubmit = (values: LoginFormSchema) => {
+  const handleLogin = (values: LoginFormSchema) => {
     console.log('Login submitted', values);
+    router.replace({ pathname: '/dashboard' } as const);
   };
 
+  const accentPrimary = isDark ? '#A78BFA' : '#4338CA';
+  const accentSecondary = isDark ? '#C4B5FD' : '#7C3AED';
+  const cardBg = theme.colors.surface;
+  const cardBorder = isDark ? 'rgba(255,255,255,0.08)' : '#E5E7EB';
+  const background = theme.colors.background;
+
   return (
-    <SafeAreaView style={[styles.screen, { backgroundColor: theme.colors.background }]}> 
+    <SafeAreaView style={[styles.screen, { backgroundColor: background }]}> 
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior="padding"
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 110 : 80}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
-            style={[styles.scrollView, { backgroundColor: theme.colors.background }]}
+            style={styles.scrollView}
             contentContainerStyle={styles.content}
             keyboardShouldPersistTaps="handled"
-            keyboardDismissMode="on-drag"
+            keyboardDismissMode="interactive"
+            bounces={false}
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.hero}>
-              <Text style={[styles.title, { color: theme.colors.textPrimary }]}>Welcome back</Text>
-              <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>Sign in to continue to your account.</Text>
+              <View style={[styles.badge, { backgroundColor: isDark ? '#FDE68A' : '#E9D5FF' }]}> 
+                <Text style={[styles.badgeText, { color: isDark ? '#92400E' : '#6D28D9' }]}>OKULR Secure</Text>
+              </View>
+              <Text style={[styles.title, { color: accentPrimary }]}>Welcome back</Text>
+              <Text style={[styles.subtitle, { color: accentSecondary }]}>Sign in to continue to your account.</Text>
             </View>
 
-            <View
-              style={[
-                styles.card,
-                {
-                  backgroundColor: theme.colors.surface,
-                  borderColor: theme.colors.inputBorder,
-                  shadowColor: theme.colors.textPrimary,
-                },
-              ]}
-            >
-              <Text style={[styles.cardTitle, { color: theme.colors.textPrimary }]}>Secure access</Text>
+            <View style={[styles.card, { backgroundColor: cardBg, borderColor: cardBorder }]}> 
+              <Text style={[styles.cardTitle, { color: accentPrimary }]}>Secure access</Text>
               <Text style={[styles.cardSubtitle, { color: theme.colors.textSecondary }]}>Use your credentials to access your dashboard quickly.</Text>
 
               <ThemeToggle />
@@ -71,7 +77,7 @@ export const LoginScreen: React.FC = () => {
               <Formik
                 initialValues={initialValues}
                 validationSchema={loginValidationSchema}
-                onSubmit={handleSubmit}
+                onSubmit={handleLogin}
               >
                 {({
                   handleChange,
@@ -142,47 +148,62 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'stretch',
+    minHeight: '100%',
     paddingHorizontal: 20,
-    paddingVertical: 18,
+    paddingVertical: 28,
     paddingBottom: 24,
   },
   hero: {
+    marginBottom: 18,
+  },
+  badge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 999,
     marginBottom: 16,
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 0.8,
   },
   card: {
     width: '100%',
-    borderRadius: 26,
+    borderRadius: 32,
     borderWidth: 1,
-    padding: 20,
+    padding: 24,
     marginTop: 4,
-    marginBottom: 16,
-    shadowOpacity: 0.14,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 10,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 22,
+    shadowOffset: { width: 0, height: 12 },
+    elevation: 14,
     overflow: 'hidden',
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '800',
     marginBottom: 4,
   },
   cardSubtitle: {
-    fontSize: 13,
-    lineHeight: 18,
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: '900',
-    marginBottom: 8,
-    letterSpacing: -0.4,
-  },
-  subtitle: {
     fontSize: 14,
     lineHeight: 20,
+    marginBottom: 18,
+  },
+  title: {
+    fontSize: 34,
+    fontWeight: '900',
+    marginBottom: 10,
+    letterSpacing: -0.6,
+  },
+  subtitle: {
+    fontSize: 16,
+    lineHeight: 24,
+    maxWidth: '92%',
   },
   form: {
     width: '100%',
